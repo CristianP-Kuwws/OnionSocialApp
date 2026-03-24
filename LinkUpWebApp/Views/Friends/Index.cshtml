@@ -1,0 +1,177 @@
+﻿@model FriendsPageViewModel
+@{
+    ViewData["Title"] = "Friends";
+}
+
+<div class="container mt-4">
+    <h2>Amigos</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-light">
+                    <h5>Mis Amigos (@Model.Friends.Count)</h5>
+                </div>
+                <div class="card-body">
+                    @if (!Model.Friends.Any())
+                    {
+                        <p class="text-muted">No tienes amigos agregados.</p>
+                    }
+                    else
+                    {
+                        <div class="list-group">
+                            @foreach (var friend in Model.Friends)
+                            {
+                                <div class="list-group-item">
+                                    <div class="d-flex align-items-center">
+                                        @if (!string.IsNullOrEmpty(friend.ProfilePicture))
+                                        {
+                                            <img src="@friend.ProfilePicture" alt="@friend.UserName"
+                                                 class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                        }
+                                        <div class="flex-grow-1">
+                                            <a asp-controller="Friends" asp-action="UserPosts" asp-route-userId="@friend.UserId"
+                                               class="text-decoration-none">
+                                                <strong>@friend.FullName</strong>
+                                            </a>
+                                            <small class="text-muted d-block">@@@friend.UserName</small>
+                                        </div>
+                                    </div>
+                                    <a asp-controller="Friends" asp-action="RemoveFriend" asp-route-friendId="@friend.UserId"
+                                       class="btn btn-sm btn-danger mt-2 w-100">Eliminar</a>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h4 class="mb-3">Publicaciones de Amigos</h4>
+
+            @if (!Model.FriendsPosts.Any())
+            {
+                <div class="alert alert-info">
+                    No hay publicaciones de amigos.
+                </div>
+            }
+            else
+            {
+                @foreach (var post in Model.FriendsPosts)
+                {
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center">
+                                @if (!string.IsNullOrEmpty(post.UserProfilePicture))
+                                {
+                                    <img src="@post.UserProfilePicture" alt="@post.UserName"
+                                         class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                }
+                                <div>
+                                    <a asp-controller="Friends" asp-action="UserPosts" asp-route-userId="@post.UserId"
+                                       class="text-decoration-none">
+                                        <strong>@post.UserFullName</strong>
+                                    </a>
+                                    <small class="text-muted d-block">@post.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p>@post.Content</p>
+
+                            @if (post.Type == PostType.Image && !string.IsNullOrEmpty(post.MediaPath))
+                            {
+                                <img src="@post.MediaPath" class="img-fluid mb-3" alt="Post image">
+                            }
+                            else if (post.Type == PostType.Video && !string.IsNullOrEmpty(post.YouTubeUrl))
+                            {
+                                var videoId = post.YouTubeUrl.Contains("v=")
+                                ? post.YouTubeUrl.Split("v=")[1].Split("&")[0]
+                                : post.YouTubeUrl.Split("/").Last();
+
+                                <div class="ratio ratio-16x9 mb-3">
+                                    <iframe src="https://www.youtube.com/embed/@videoId" allowfullscreen></iframe>
+                                </div>
+                            }
+
+                            <div class="mb-3">
+                                @if (post.UserReaction == ReactionType.Like)
+                                {
+                                    <span class="text-success me-2">
+                                        <strong>Me gusta</strong> (@post.LikeCount)
+                                    </span>
+
+                                    <form asp-controller="Friends" asp-action="ToggleReaction" method="post" class="d-inline">
+                                        <input type="hidden" name="postId" value="@post.Id" />
+                                        <input type="hidden" name="reactionType" value="dislike" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            No me gusta (@post.DislikeCount)
+                                        </button>
+                                    </form>
+                                }
+                                else if (post.UserReaction == ReactionType.Dislike)
+                                {
+                                    <form asp-controller="Friends" asp-action="ToggleReaction" method="post" class="d-inline">
+                                        <input type="hidden" name="postId" value="@post.Id" />
+                                        <input type="hidden" name="reactionType" value="like" />
+                                        <button type="submit" class="btn btn-sm btn-outline-success">
+                                            Me gusta (@post.LikeCount)
+                                        </button>
+                                    </form>
+
+                                    <span class="text-danger ms-2">
+                                        <strong>No me gusta</strong> (@post.DislikeCount)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <form asp-controller="Friends" asp-action="ToggleReaction" method="post" class="d-inline">
+                                        <input type="hidden" name="postId" value="@post.Id" />
+                                        <input type="hidden" name="reactionType" value="like" />
+                                        <button type="submit" class="btn btn-sm btn-outline-success">
+                                            Me gusta (@post.LikeCount)
+                                        </button>
+                                    </form>
+
+                                    <form asp-controller="Friends" asp-action="ToggleReaction" method="post" class="d-inline">
+                                        <input type="hidden" name="postId" value="@post.Id" />
+                                        <input type="hidden" name="reactionType" value="dislike" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            No me gusta (@post.DislikeCount)
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+
+                            <hr>
+                            <h6>Comentarios (@post.Comments.Count)</h6>
+
+                            @foreach (var comment in post.Comments)
+                            {
+                                @await Html.PartialAsync("_CommentPartialFriends", comment)
+                            }
+
+                            <form asp-controller="Friends" asp-action="AddComment" method="post" class="mt-3">
+                                <input type="hidden" name="PostId" value="@post.Id" />
+                                <div class="input-group">
+                                    <input type="text" name="Content" class="form-control"
+                                           placeholder="Escribe un comentario..." required />
+                                    <button type="submit" class="btn btn-primary">Comentar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

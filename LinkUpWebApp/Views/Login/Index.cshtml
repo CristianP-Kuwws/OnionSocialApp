@@ -1,0 +1,94 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_LayoutAnonymous";
+}
+
+<div class="col-12 col-md-6 offset-md-3 mt-5">
+    <div class="card">
+        <div class="card-header bg-success text-light">
+            <h5 class="text-center">Inicio de sesion</h5>
+        </div>
+        <div class="card-body">
+
+            @if (!string.IsNullOrEmpty(ViewBag.UnauthorizedMessage))
+            {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    @ViewBag.UnauthorizedMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-x-circle-fill me-2"></i>
+                    @ViewBag.ErrorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                </div>
+            }
+
+            @if (ViewBag.HasError != null && ViewBag.HasError)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @foreach (var error in ViewBag.Errors)
+                    {
+                        <p class="mb-0">@error</p>
+                    }
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                </div>
+            }
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                </div>
+            }
+
+            <form asp-controller="Login" asp-action="Index" method="POST">
+                @if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+                {
+                    <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+                }
+
+                <div class="mb-3">
+                    <label asp-for="UserName" class="form-label">Usuario:</label>
+                    <input class="form-control" asp-for="UserName" required />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Contraseña:</label>
+                    <input class="form-control" asp-for="Password" type="password" required />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-controller="Login" asp-action="ForgotPassword" class="btn btn-warning btn-sm">Restablecer contraseña</a>
+                    <a asp-controller="Login" asp-action="Register" class="btn btn-primary btn-sm">Registrarse</a>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-success w-100">Iniciar sesion</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

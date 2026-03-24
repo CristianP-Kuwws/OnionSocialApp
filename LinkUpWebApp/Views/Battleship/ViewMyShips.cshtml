@@ -1,0 +1,51 @@
+﻿@model MyShipsBoardViewModel
+
+@{
+    ViewData["Title"] = "My Ships";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Posicion de Mis Barcos</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                Gris = Posicion del barco
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered text-center" style="width: auto; margin: 0 auto;">
+                    @for (int row = 0; row < 12; row++)
+                    {
+                        <tr>
+                            @for (int col = 0; col < 12; col++)
+                            {
+                                var cellState = Model.Board[row, col];
+                                string bgClass = "";
+
+                                if (cellState == LinkUpApp.Core.Domain.Common.Enum.Battleship.CellStates.ShipPositionCellState.Ship)
+                                {
+                                    bgClass = "bg-secondary";
+                                }
+
+                                <td style="width: 40px; height: 40px; padding: 0;" class="@bgClass">
+                                    @if (bgClass == "bg-secondary")
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center h-100">
+                                            <img src="/images/battleship/battleshipIcon.png" alt="Ship" style="width: 30px; height: 30px; object-fit: contain;" />
+                                        </div>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+
+            <div class="mt-4">
+                <a asp-action="AttackBoard" asp-route-gameId="@Model.GameId" class="btn btn-outline-secondary">Volver al Ataque</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+﻿@model FriendRequestsPageViewModel
+@{
+    ViewData["Title"] = "Friend Requests";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-success text-light">
+            <h5 class="text-center">Solicitudes de amistad</h5>
+        </div>
+        <div class="card-body">
+
+            <!-- Solicitudes pendientes recibidas -->
+            <h5 class="mb-3">Solicitudes pendientes (@Model.PendingCount)</h5>
+            @if (Model.PendingRequests != null && Model.PendingRequests.Any())
+            {
+                @foreach (var request in Model.PendingRequests)
+                {
+                    @await Html.PartialAsync("_PendingRequestPartial", request)
+                }
+            }
+            else
+            {
+                <div class="alert alert-info">No tienes solicitudes pendientes.</div>
+            }
+
+            <hr />
+
+            <!-- Solicitudes enviadas -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Solicitudes enviadas</h5>
+                <a asp-controller="FriendRequest" asp-action="SelectUser" class="btn btn-primary btn-sm">Nueva solicitud</a>
+            </div>
+
+            @if (Model.SentRequests != null && Model.SentRequests.Any())
+            {
+                @foreach (var request in Model.SentRequests)
+                {
+                    @await Html.PartialAsync("_SentRequestPartial", request)
+                }
+            }
+            else
+            {
+                <div class="alert alert-info">No has enviado solicitudes.</div>
+            }
+        </div>
+    </div>
+</div>

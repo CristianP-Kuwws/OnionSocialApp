@@ -1,0 +1,69 @@
+﻿@model List<AvailableOpponentViewModel>
+@{
+    ViewData["Title"] = "Select Opponent";
+}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Seleccionar Amigo para Jugar</h5>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                    }
+
+                    <form asp-action="SelectOpponent" method="get" class="mb-3 d-flex">
+                        <input type="text" name="searchTerm" class="form-control me-2" placeholder="Buscar por nombre de usuario" value="@ViewBag.SearchTerm" />
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </form>
+
+                    @if (Model == null || !Model.Any())
+                    {
+                        <div class="alert alert-info">
+                            No hay amigos disponibles para jugar. Todos estan en partidas activas.
+                        </div>
+                        <a asp-action="Index" class="btn btn-secondary">Volver Atras</a>
+                    }
+                    else
+                    {
+
+                        <form asp-action="StartGame" method="post" id="startGameForm">
+                            <div class="list-group mb-3">
+                                @foreach (var opponent in Model)
+                                {
+                                    <label class="list-group-item list-group-item-action">
+                                        <div class="d-flex align-items-center">
+                                            <input type="radio" name="SelectedOpponentId" value="@opponent.UserId" class="me-3" required />
+                                            @if (!string.IsNullOrEmpty(opponent.ProfilePicture))
+                                            {
+                                                <img src="@opponent.ProfilePicture" alt="@opponent.UserName" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;" />
+                                            }
+                                            else
+                                            {
+                                                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                                    @opponent.UserName.Substring(0, 1).ToUpper()
+                                                </div>
+                                            }
+                                            <div>
+                                                <strong>@opponent.UserName</strong>
+                                                <br />
+                                                <small class="text-muted">@opponent.FullName</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                }
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-success">Iniciar Partida</button>
+                                <a asp-action="Index" class="btn btn-outline-secondary">Volver Atras</a>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

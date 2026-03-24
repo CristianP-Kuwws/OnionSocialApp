@@ -1,0 +1,87 @@
+﻿@model SavePostViewModel
+@{
+    ViewData["Title"] = Model.Id.HasValue ? "Editar Post" : "Nuevo Post";
+    var isEdit = Model.Id.HasValue;
+}
+
+<div class="col-12 col-md-8 offset-md-2 mt-4">
+    <div class="card">
+        <div class="card-header bg-warning text-light">
+            <h5 class="text-center">@ViewData["Title"]</h5>
+        </div>
+        <div class="card-body">
+            <form asp-controller="Home" asp-action="@(isEdit ? "Edit" : "Create")" method="POST" enctype="multipart/form-data">
+
+                @if (isEdit)
+                {
+                    <input type="hidden" asp-for="Id" />
+                }
+
+                <div class="mb-3">
+                    <label asp-for="Content" class="form-label">Contenido:</label>
+                    <textarea class="form-control" asp-for="Content" rows="4"></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MediaType" class="form-label">Tipo de Contenido:</label>
+                    <select class="form-control" asp-for="MediaType" id="mediaTypeSelect">
+                        <option value="Imagen">Imagen</option>
+                        <option value="Video">Video</option>
+                    </select>
+                    <span asp-validation-for="MediaType" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3" id="imageSection">
+                    <label asp-for="ImageFile" class="form-label">Imagen:</label>
+                    <input type="file" class="form-control" asp-for="ImageFile" accept="image/*" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    @if (isEdit && !string.IsNullOrEmpty(ViewBag.CurrentMediaPath))
+                    {
+                        <small class="text-muted d-block mt-1">Imagen actual:</small>
+                        <img src="@ViewBag.CurrentMediaPath" class="img-thumbnail mt-2" style="max-width: 200px;" />
+                    }
+                </div>
+
+                <div class="mb-3" id="videoSection" style="display: none;">
+                    <label asp-for="YouTubeUrl" class="form-label">Enlace de YouTube:</label>
+                    <input class="form-control" asp-for="YouTubeUrl" placeholder="https://www.youtube.com/watch?v=..." />
+                    <span asp-validation-for="YouTubeUrl" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-primary float-end">Guardar</button>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary float-end me-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Script que muestra u oculta los campos de imagen o video segun el tipo de contenido seleccionado -->
+
+<script>
+    document.getElementById('mediaTypeSelect').addEventListener('change', function() {
+        var imageSection = document.getElementById('imageSection');
+        var videoSection = document.getElementById('videoSection');
+
+        if (this.value === 'Imagen') {
+            imageSection.style.display = 'block';
+            videoSection.style.display = 'none';
+        } else {
+            imageSection.style.display = 'none';
+            videoSection.style.display = 'block';
+        }
+    });
+
+    window.onload = function() {
+        var mediaType = document.getElementById('mediaTypeSelect').value;
+        var imageSection = document.getElementById('imageSection');
+        var videoSection = document.getElementById('videoSection');
+
+        if (mediaType === 'Video') {
+            imageSection.style.display = 'none';
+            videoSection.style.display = 'block';
+        }
+    };
+</script>

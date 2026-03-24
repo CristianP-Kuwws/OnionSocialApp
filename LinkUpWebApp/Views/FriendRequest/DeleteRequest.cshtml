@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Delete Request";
+}
+
+<div class="col-12 col-md-6 offset-md-3 mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-light">
+            <h5 class="text-center">Eliminar Solicitud</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <strong>¿Está seguro que desea eliminar la solicitud de amistad para @ViewBag.ReceiverUserName?</strong>
+            </div>
+
+            <form asp-action="DeleteConfirmed" asp-controller="FriendRequest" method="post">
+                <input type="hidden" name="id" value="@ViewBag.RequestId" />
+
+                <div class="clearfix">
+                    <button type="submit" class="btn btn-danger float-end">Eliminar Solicitud</button>
+                    <a asp-action="Index" asp-controller="FriendRequest" class="btn btn-outline-secondary float-end me-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

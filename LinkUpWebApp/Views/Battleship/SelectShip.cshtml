@@ -1,0 +1,73 @@
+﻿@model List<LinkUpApp.Core.Application.ViewModels.Battleship.Ship.AvailableShipViewModel>
+
+@{
+    ViewData["Title"] = "Select Ship";
+
+    var shipNames = new Dictionary<int, string>
+    {
+        { 2, "Destructor" },
+        { 3, "Submarino" },
+        { 4, "Acorazado" },
+        { 5, "Portaaviones" }
+    };
+
+    var shipImages = new Dictionary<int, string>
+    {
+        { 2, "/images/battleship/destroyer.jpg" },
+        { 3, "/images/battleship/submarine.jpg" },
+        { 4, "/images/battleship/battleship.jpg" },
+        { 5, "/images/battleship/carrier.jpg" }
+    };
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Selecciona un Barco para Posicionar</h5>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                    }
+
+                    <form asp-action="SelectShip" asp-route-gameId="@ViewBag.GameId" method="post" id="selectShipForm">
+                        <input type="hidden" name="gameId" value="@ViewBag.GameId" />
+
+                        <div class="list-group mb-3">
+                            @foreach (var ship in Model)
+                            {
+                                var shipName = shipNames.ContainsKey(ship.Size) ? shipNames[ship.Size] : $"Barco {ship.Size}";
+                                var shipImage = shipImages.ContainsKey(ship.Size) ? shipImages[ship.Size] : "";
+
+                                <label class="list-group-item list-group-item-action">
+                                    <div class="d-flex align-items-center">
+                                        <input type="radio" name="SelectedShipType" value="@((int)ship.Type)" class="me-3" required />
+
+                                        @if (!string.IsNullOrEmpty(shipImage))
+                                        {
+                                            <img src="@shipImage" alt="@shipName" class="me-3" style="width: 80px; height: auto; object-fit: contain;" />
+                                        }
+
+                                        <div>
+                                            <strong>@shipName</strong>
+                                            <br />
+                                            <small class="text-muted">Ocupa @ship.Size posiciones</small>
+                                        </div>
+                                    </div>
+                                </label>
+                            }
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Posicionar Barco</button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">Volver Atras</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

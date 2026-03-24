@@ -1,0 +1,170 @@
+﻿@model BattleshipMainViewModel
+
+@{
+    ViewData["Title"] = "Battleship";
+}
+
+<div class="container mt-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <!-- Partidas Activas -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Partidas Activas</h5>
+            <a asp-action="SelectOpponent" class="btn btn-light btn-sm">Iniciar Nueva Partida</a>
+        </div>
+        <div class="card-body">
+            @if (!Model.ActiveGames.Any())
+            {
+                <p class="text-muted">No tienes partidas activas.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Oponente</th>
+                                <th>Inicio</th>
+                                <th>Duracion</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var game in Model.ActiveGames)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(game.OpponentProfilePicture))
+                                        {
+                                            <img src="@game.OpponentProfilePicture" alt="@game.OpponentUserName" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;" />
+                                        }
+                                        <strong>@game.OpponentUserName</strong>
+                                        <br />
+                                        <small class="text-muted">@game.OpponentFullName</small>
+                                    </td>
+                                    <td>@game.CreatedAt.ToShortDateString()</td>
+                                    <td>@game.HoursElapsed horas</td>
+                                    <td>
+                                        @if (game.MySetupStatus != LinkUpApp.Core.Domain.Common.Enum.Battleship.PlayerSetupStatus.Completed)
+                                        {
+                                            <span class="badge bg-warning">Configurando barcos</span>
+                                        }
+                                        else if (game.OpponentSetupStatus != LinkUpApp.Core.Domain.Common.Enum.Battleship.PlayerSetupStatus.Completed)
+                                        {
+                                            <span class="badge bg-info">Esperando oponente</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">En juego</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-action="EnterGame" asp-route-gameId="@game.GameId" class="btn btn-sm btn-primary me-1">Entrar</a>
+                                        <a asp-action="ConfirmSurrender" asp-route-gameId="@game.GameId" class="btn btn-sm btn-danger">Rendirse</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Estadisticas -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Estadisticas</h5>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <h3>@Model.Statistics.TotalGames</h3>
+                    <p class="text-muted">Total de Partidas</p>
+                </div>
+                <div class="col-md-4">
+                    <h3 class="text-success">@Model.Statistics.GamesWon</h3>
+                    <p class="text-muted">Partidas Ganadas</p>
+                </div>
+                <div class="col-md-4">
+                    <h3 class="text-danger">@Model.Statistics.GamesLost</h3>
+                    <p class="text-muted">Partidas Perdidas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historial de Partidas -->
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Historial de Partidas</h5>
+        </div>
+        <div class="card-body">
+            @if (!Model.GameHistory.Any())
+            {
+                <p class="text-muted">No hay partidas finalizadas.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Oponente</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Final</th>
+                                <th>Duracion</th>
+                                <th>Resultado</th>
+                                <th>Ganador</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var game in Model.GameHistory)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(game.OpponentProfilePicture))
+                                        {
+                                            <img src="@game.OpponentProfilePicture" alt="@game.OpponentUserName" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;" />
+                                        }
+                                        <strong>@game.OpponentUserName</strong>
+                                        <br />
+                                        <small class="text-muted">@game.OpponentFullName</small>
+                                    </td>
+                                    <td>@game.CreatedAt.ToShortDateString()</td>
+                                    <td>@game.FinishedAt.ToShortDateString()</td>
+                                    <td>@game.DurationInHours horas</td>
+                                    <td>
+                                        @if (game.DidIWin)
+                                        {
+                                            <span class="badge bg-success">Victoria</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Derrota</span>
+                                        }
+                                    </td>
+                                    <td>@game.WinnerDisplay</td>
+                                    <td>
+                                        <a asp-action="ViewResult" asp-route-gameId="@game.GameId" class="btn bt-sm btn-info text-light">Ver Resultado</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

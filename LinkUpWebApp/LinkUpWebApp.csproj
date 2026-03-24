@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LinkUpApp.Core.Application\LinkUpApp.Core.Application.csproj" />
+    <ProjectReference Include="..\LinkUpApp.Core.Domain\LinkUpApp.Core.Domain.csproj" />
+    <ProjectReference Include="..\LinkUpApp.Infrastructure.Identity\LinkUpApp.Infrastructure.Identity.csproj" />
+    <ProjectReference Include="..\LinkUpApp.Infrastructure.Persistence\LinkUpApp.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\LinkUpApp.Infrastructure.Shared\LinkUpApp.Infrastructure.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Middlewares\" />
+    <Folder Include="wwwroot\Images\Posts\1\" />
+    <Folder Include="wwwroot\Images\Posts\2\" />
+    <Folder Include="wwwroot\Images\Posts\3\" />
+    <Folder Include="wwwroot\Images\Posts\4\" />
+    <Folder Include="wwwroot\Images\Posts\6\" />
+    <Folder Include="wwwroot\Images\Posts\7\" />
+    <Folder Include="wwwroot\Images\Users\8eccc66d-7ffb-4a80-868f-0d0f11d81382\" />
+    <Folder Include="wwwroot\Images\Users\Badd\" />
+    <Folder Include="wwwroot\Images\Users\BasicCrisUser\" />
+    <Folder Include="wwwroot\Images\Users\bebbac5c-21c0-4e80-a688-69c9e6b04a5e\" />
+    <Folder Include="wwwroot\Images\Users\c3e35b64-fdf9-41f8-94e8-2d6033428d13\" />
+    <Folder Include="wwwroot\Images\Users\cdf12846-7894-435d-a94b-dbf67ac7a095\" />
+    <Folder Include="wwwroot\Images\Users\d82fd585-4aab-41ff-9ac8-82eb672c1c29\" />
+    <Folder Include="wwwroot\Images\Users\Dexter\" />
+    <Folder Include="wwwroot\Images\Users\e76b4aeb-81c0-4318-887f-ceba1fe9a7ad\" />
+    <Folder Include="wwwroot\Images\Users\ebf85c99-9c8c-4117-badf-a9bf6728658a\" />
+    <Folder Include="wwwroot\Images\Users\f3336b34-58a8-4eb1-bf27-37ef4bc3eb8d\" />
+    <Folder Include="wwwroot\Images\Users\fishySaxon\" />
+    <Folder Include="wwwroot\Images\Users\HarborButcher\" />
+    <Folder Include="wwwroot\Images\Users\ILoveKuwwi\" />
+    <Folder Include="wwwroot\Images\Users\Kuwwi\" />
+    <Folder Include="wwwroot\Images\Users\Yumi\" />
+  </ItemGroup>
+
+</Project>

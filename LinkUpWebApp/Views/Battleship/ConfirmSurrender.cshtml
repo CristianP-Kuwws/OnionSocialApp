@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Confirm Surrender";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger text-light">
+                    <h5 class="mb-0">Confirmar Rendicion</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p class="lead">Esta seguro que desea rendirse?</p>
+                    <p class="text-muted">El oponente ganara la partida.</p>
+
+                    <div class="mt-4">
+                        <form asp-action="Surrender" method="post" class="d-inline">
+                            <input type="hidden" name="gameId" value="@ViewBag.GameId" />
+                            <button type="submit" class="btn btn-danger me-2">Aceptar</button>
+                        </form>
+                        <a asp-action="AttackBoard" asp-route-gameId="@ViewBag.GameId" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

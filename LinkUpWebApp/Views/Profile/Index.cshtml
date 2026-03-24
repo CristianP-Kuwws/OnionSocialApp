@@ -1,0 +1,86 @@
+﻿@model EditProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="col-12 col-md-8 offset-md-2 mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-light">
+            <h5 class="text-center">Mi Perfil</h5>
+        </div>
+
+        <div class="card-body">
+            @if (ViewBag.hasError != null && ViewBag.hasError)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @foreach (var error in ViewBag.Errors)
+                    {
+                        <p class="text-danger mb-0">@error</p>
+                    }
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                </div>
+            }
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+
+            <form asp-controller="Profile" asp-action="Index" method="post" enctype="multipart/form-data">
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FirstName" class="form-label">Nombre:</label>
+                        <input asp-for="FirstName" class="form-control" required />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="LastName" class="form-label">Apellido:</label>
+                        <input asp-for="LastName" class="form-control" required />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Phone" class="form-label">Telefono:</label>
+                    <input asp-for="Phone" class="form-control" required />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ProfilePicture" class="form-label">Foto de perfil:</label>
+                    <input asp-for="ProfilePicture" class="form-control" type="file" accept="image/*" />
+                    <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+
+                    @if (!string.IsNullOrEmpty(Model.CurrentProfilePicturePath))
+                    {
+                        <div class="mt-2 text-center">
+                            <small class="text-muted">Imagen actual:</small><br />
+                            <img src="@Model.CurrentProfilePicturePath" class="rounded mt-1" style="width: 100px; height: 100px; object-fit: cover;" />
+                        </div>
+                    }
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Password" class="form-label">Nueva contraseña:</label>
+                        <input asp-for="Password" class="form-control" type="password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label">Confirmar contraseña:</label>
+                        <input asp-for="ConfirmPassword" class="form-control" type="password" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary ">Volver atras</a>
+                    <button type="submit" class="btn btn-primary ms-2">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

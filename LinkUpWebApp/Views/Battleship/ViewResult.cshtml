@@ -1,0 +1,182 @@
+﻿@model GameResultViewModel
+
+@{
+    ViewData["Title"] = "View Results";
+    var currentView = ViewBag.CurrentView ?? "MyAttacks";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header @(Model.DidIWin ? "bg-success" : "bg-danger") text-white">
+            <h5 class="mb-0">
+                @if (Model.DidIWin)
+                {
+                    <text>Victoria! </text>
+                }
+                else
+                {
+                    <text>Derrota</text>
+                }
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p><strong>Oponente:</strong> @Model.OpponentUserName</p>
+                    <p><strong>Inicio:</strong> @Model.StartedAt.ToShortDateString()</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Finalizacion:</strong> @Model.FinishedAt.ToShortDateString()</p>
+                    <p><strong>Duracion:</strong> @Model.DurationInHours horas</p>
+                </div>
+            </div>
+
+            <!-- Tabs para cambiar entre vistas -->
+            <ul class="nav nav-tabs mb-3">
+                <li class="nav-item">
+                    <a class="nav-link @(currentView == "MyAttacks" ? "active" : "")" asp-action="ViewResult" asp-route-gameId="@Model.GameId">
+                        Mis Ataques
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(currentView == "OpponentAttacks" ? "active" : "")" asp-action="ViewOpponentAttacks" asp-route-gameId="@Model.GameId">
+                        Ataques del Oponente
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(currentView == "MyShips" ? "active" : "")" asp-action="ViewMyShipsResult" asp-route-gameId="@Model.GameId">
+                        Mis Barcos
+                    </a>
+                </li>
+            </ul>
+
+            @if (currentView == "MyAttacks")
+            {
+                <h6 class="mb-3">Mis Ataques</h6>
+                <div class="alert alert-secondary">
+                    Blanco = No atacado | Verde = Agua | Rojo = Impacto
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center" style="width: auto; margin: 0 auto;">
+                        @for (int row = 0; row < 12; row++)
+                        {
+                            <tr>
+                                @for (int col = 0; col < 12; col++)
+                                {
+                                    var cellState = Model.MyAttackBoard[row, col];
+                                    string bgClass = "";
+
+                                    switch (cellState)
+                                    {
+                                        case LinkUpApp.Core.Domain.Common.Enum.Battleship.CellStates.AttackCellState.Hit:
+                                            bgClass = "bg-danger";
+                                            break;
+                                        case LinkUpApp.Core.Domain.Common.Enum.Battleship.CellStates.AttackCellState.Miss:
+                                            bgClass = "bg-success";
+                                            break;
+                                        default:
+                                            bgClass = "bg-light";
+                                            break;
+                                    }
+
+                                    <td style="width: 40px; height: 40px; padding: 0;" class="@bgClass">
+                                        <div class="d-flex align-items-center justify-content-center h-100">
+                                            <img src="/images/battleship/battleshipIcon.png" alt="Ship" style="width: 30px; height: 30px; object-fit: contain;" />
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+            else if (currentView == "OpponentAttacks")
+            {
+                <h6 class="mb-3">Ataques de @Model.OpponentUserName</h6>
+                <div class="alert alert-secondary">
+                    Blanco = No atacado | Verde = Agua | Rojo = Impacto
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center" style="width: auto; margin: 0 auto;">
+                        @for (int row = 0; row < 12; row++)
+                        {
+                            <tr>
+                                @for (int col = 0; col < 12; col++)
+                                {
+                                    var cellState = Model.OpponentAttackBoard[row, col];
+                                    string bgClass = "";
+
+                                    switch (cellState)
+                                    {
+                                        case LinkUpApp.Core.Domain.Common.Enum.Battleship.CellStates.AttackCellState.Hit:
+                                            bgClass = "bg-danger";
+                                            break;
+                                        case LinkUpApp.Core.Domain.Common.Enum.Battleship.CellStates.AttackCellState.Miss:
+                                            bgClass = "bg-success";
+                                            break;
+                                        default:
+                                            bgClass = "bg-light";
+                                            break;
+                                    }
+
+                                    <td style="width: 40px; height: 40px; padding: 0;" class="@bgClass">
+                                        <div class="d-flex align-items-center justify-content-center h-100">
+                                            <img src="/images/battleship/battleshipIcon.png" alt="Ship" style="width: 30px; height: 30px; object-fit: contain;" />
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+            else if (currentView == "MyShips")
+            {
+                <h6 class="mb-3">Posicion de Mis Barcos</h6>
+                <div class="alert alert-secondary">
+                    Gris = Barco intacto | Rojo = Barco impactado
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center" style="width: auto; margin: 0 auto;">
+                        @for (int row = 0; row < 12; row++)
+                        {
+                            <tr>
+                                @for (int col = 0; col < 12; col++)
+                                {
+                                    var cellState = Model.MyShipBoard[row, col];
+                                    string bgClass = "";
+
+                                    switch (cellState)
+                                    {
+                                        case LinkUpApp.Core.Domain.Common.Enum.Battleship.CellStates.ShipPositionCellState.Ship:
+                                            bgClass = "bg-secondary";
+                                            break;
+                                        case LinkUpApp.Core.Domain.Common.Enum.Battleship.CellStates.ShipPositionCellState.ShipHit:
+                                            bgClass = "bg-danger";
+                                            break;
+                                        default:
+                                            bgClass = "";
+                                            break;
+                                    }
+
+                                    <td style="width: 40px; height: 40px; padding: 0;" class="@bgClass">
+                                        @if (cellState != LinkUpApp.Core.Domain.Common.Enum.Battleship.CellStates.ShipPositionCellState.Empty)
+                                        {
+                                            <div class="d-flex align-items-center justify-content-center h-100">
+                                                <img src="/images/battleship/battleshipIcon.png" alt="Ship" style="width: 30px; height: 30px; object-fit: contain;" />
+                                            </div>
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+
+            <div class="mt-4">
+                <a asp-action="Index" class="btn btn-outline-secondary">Volver Atras</a>
+            </div>
+        </div>
+    </div>
+</div>

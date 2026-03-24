@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Reject Request";
+}
+
+<div class="col-12 col-md-6 offset-md-3 mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-light">
+            <h5 class="text-center">Rechazar solicitud</h5>
+        </div>
+        <div class="card-body text-center">
+            <p>Esta seguro que desea rechazar la solicitud de amistad del usuario <strong>@ViewBag.SenderUserName</strong>?</p>
+
+            <form asp-action="RejectConfirmed" asp-controller="FriendRequest" method="post">
+                <input type="hidden" name="id" value="@ViewBag.RequestId" />
+
+                <div class="mt-4">
+                    <a asp-action="Index" asp-controller="FriendRequest" class="btn btn-outline-secondary me-2">Cancelar</a>
+                    <button type="submit" class="btn btn-danger">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

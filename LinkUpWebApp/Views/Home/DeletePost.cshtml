@@ -1,0 +1,42 @@
+﻿@model PostViewModel
+@{
+    ViewData["Title"] = "Delete Post";
+}
+
+<div class="col-12 col-md-6 offset-md-3 mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-light">
+            <h5 class="text-center">Eliminar Publicacion</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <strong>Esta seguro que desea eliminar esta publicacion?</strong>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p><strong>Contenido:</strong> @Model.Content</p>
+
+                    @if (Model.Type == PostType.Image && !string.IsNullOrEmpty(Model.MediaPath))
+                    {
+                        <img src="@Model.MediaPath" class="img-thumbnail" style="max-width: 300px;" />
+                    }
+                    else if (Model.Type == PostType.Video && !string.IsNullOrEmpty(Model.YouTubeUrl))
+                    {
+                        <p><strong>Video:</strong> @Model.YouTubeUrl</p>
+                    }
+
+                    <p class="text-muted mb-0">
+                        <small>Fecha: @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                    </p>
+                </div>
+            </div>
+
+            <form asp-controller="Home" asp-action="DeleteConfirmed" method="post">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn btn-danger float-end">Eliminar</button>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary float-end me-2">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>

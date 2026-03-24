@@ -1,0 +1,95 @@
+﻿@model AttackBoardViewModel
+
+@{
+    ViewData["Title"] = "Attack Board";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Tablero de Ataque - Turno #@Model.TurnNumber</h5>
+        </div>
+        <div class="card-body">
+            @if (TempData["AttackResult"] != null)
+            {
+                <div class="alert alert-info">@TempData["AttackResult"]</div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
+            <div class="alert alert-secondary">
+                Blanco = No atacado | Verde = Agua | Rojo = Impacto
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered text-center" style="width: auto; margin: 0 auto;">
+                    @for (int row = 0; row < 12; row++)
+                    {
+                        <tr>
+                            @for (int col = 0; col < 12; col++)
+                            {
+                                var cellState = Model.Board[row, col];
+                                string bgClass = "";
+                                bool canAttack = Model.IsMyTurn && cellState == LinkUpApp.Core.Domain.Common.Enum.Battleship.CellStates.AttackCellState.Unknown;
+
+                                switch (cellState)
+                                {
+                                    case LinkUpApp.Core.Domain.Common.Enum.Battleship.CellStates.AttackCellState.Hit:
+                                        bgClass = "bg-danger";
+                                        break;
+                                    case LinkUpApp.Core.Domain.Common.Enum.Battleship.CellStates.AttackCellState.Miss:
+                                        bgClass = "bg-success";
+                                        break;
+                                    default:
+                                        bgClass = "bg-light";
+                                        break;
+                                }
+
+                                <td style="width: 40px; height: 40px; padding: 0;" class="@bgClass">
+                                    @if (canAttack)
+                                    {
+                                        <form asp-action="Attack" method="post" style="margin: 0;">
+                                            <input type="hidden" name="GameId" value="@Model.GameId" />
+                                            <input type="hidden" name="TargetRow" value="@row" />
+                                            <input type="hidden" name="TargetColumn" value="@col" />
+                                            <button type="submit" class="btn btn-light w-100 h-100 p-0 d-flex align-items-center justify-content-center" style="border: 1px solid #dee2e6;">
+                                                <img src="/images/battleship/battleshipIcon.png" alt="Ship" style="width: 30px; height: 30px; object-fit: contain;" />
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center h-100">
+                                            <img src="/images/battleship/battleshipIcon.png" alt="Ship" style="width: 30px; height: 30px; object-fit: contain;" />
+                                        </div>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+
+            <div class="alert @(Model.IsMyTurn ? "alert-success" : "alert-warning") mt-3">
+                @if (Model.IsMyTurn)
+                {
+                    <strong>Es tu turno de atacar!</strong>
+                }
+                else
+                {
+                    <strong>Es turno de @Model.CurrentTurnPlayerName de atacar</strong>
+                }
+            </div>
+
+            <div class="mt-4 d-flex flex-wrap gap-2">
+                <a asp-action="AttackBoard" asp-route-gameId="@Model.GameId" class="btn btn-info text-light">Refrescar Pantalla</a>
+                <a asp-action="ViewMyShips" asp-route-gameId="@Model.GameId" class="btn btn-primary">Ver Mi Tablero</a>
+                <a asp-action="ConfirmSurrender" asp-route-gameId="@Model.GameId" class="btn bg-danger text-light">Rendirse</a>
+                <a asp-action="Index" class="btn btn-outline-secondary">Volver Atras</a>
+            </div>
+        </div>
+    </div>
+</div>

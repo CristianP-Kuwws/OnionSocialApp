@@ -1,0 +1,97 @@
+﻿@model CommentViewModel
+
+<div class="ms-@(Model.ParentCommentId != null ? "4" : "0") mt-2">
+    <div class="d-flex">
+        @if (!string.IsNullOrEmpty(Model.UserProfilePicture))
+        {
+            <img src="@Model.UserProfilePicture" alt="@Model.UserName"
+                 class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+        }
+        <div class="flex-grow-1">
+            <div class="bg-light p-2 rounded">
+                <strong>@Model.UserFullName</strong>
+                <small class="text-muted">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                <p class="mb-0">@Model.Content</p>
+            </div>
+
+            <div class="mt-1">
+                <button class="btn btn-link btn-sm p-0" onclick="showReplyForm('@Model.Id')">
+                    Responder
+                </button>
+
+                @if (Model.IsOwner)
+                {
+                    <button class="btn btn-link btn-sm p-0 text-secondary"
+                            onclick="showEditForm('@Model.Id')">
+                        Editar
+                    </button>
+                    <form asp-controller="Home" asp-action="DeleteComment" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-link btn-sm p-0 text-danger"
+                                onclick="return confirm('Seguro que deseas eliminar este comentario?')">
+                            Eliminar
+                        </button>
+                    </form>
+                }
+            </div>
+
+            <div id="replyForm_@Model.Id" style="display: none;" class="mt-2">
+                <form asp-controller="Home" asp-action="AddComment" method="post">
+                    <input type="hidden" name="PostId" value="@Model.PostId" />
+                    <input type="hidden" name="ParentCommentId" value="@Model.Id" />
+                    <div class="input-group input-group-sm">
+                        <input type="text" name="Content" class="form-control"
+                               placeholder="Escribe una respuesta..." required />
+                        <button type="submit" class="btn btn-primary me-1">Responder</button>
+                        <button type="button" class="btn btn-secondary"
+                                onclick="hideReplyForm('@Model.Id')">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="editForm_@Model.Id" style="display: none;" class="mt-2">
+                <form asp-controller="Home" asp-action="EditComment" method="post">
+                    <input type="hidden" name="Id" value="@Model.Id" />
+                    <input type="hidden" name="PostId" value="@Model.PostId" />
+                    <input type="hidden" name="ParentCommentId" value="@Model.ParentCommentId" />
+                    <div class="input-group input-group-sm">
+                        <input type="text" name="Content" class="form-control"
+                               value="@Model.Content" required />
+                        <button type="submit" class="btn btn-primary me-1">Guardar</button>
+                        <button type="button" class="btn btn-secondary"
+                                onclick="hideEditForm('@Model.Id')">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            @if (Model.Replies != null && Model.Replies.Any())
+            {
+                foreach (var reply in Model.Replies)
+                {
+                    @await Html.PartialAsync("_CommentPartial", reply)
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Este script que muestra/oculta los formularios de respuesta y edicion de comentarios -->
+
+<script>
+    function showReplyForm(commentId) {
+        document.getElementById('replyForm_' + commentId).style.display = 'block';
+    }
+    function hideReplyForm(commentId) {
+        document.getElementById('replyForm_' + commentId).style.display = 'none';
+    }
+    function showEditForm(commentId) {
+        document.getElementById('editForm_' + commentId).style.display = 'block';
+    }
+    function hideEditForm(commentId) {
+        document.getElementById('editForm_' + commentId).style.display = 'none';
+    }
+</script>

@@ -1,0 +1,50 @@
+﻿@model List<AvailableUserViewModel>
+@{
+    ViewData["Title"] = "Select user";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-light">
+            <h5 class="text-center">Seleccionar usuario para enviar solicitud</h5>
+        </div>
+        <div class="card-body">
+            <form asp-controller="FriendRequest" asp-action="SelectUser" method="get" class="mb-3 d-flex">
+                <input type="text" name="searchTerm" class="form-control me-2" placeholder="Buscar por nombre de usuario" value="@ViewBag.SearchTerm" />
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+
+            <form asp-controller="FriendRequest" asp-action="SendRequest" method="post">
+                @if (Model != null && Model.Any())
+                {
+                    <div class="list-group mb-3">
+                        @foreach (var user in Model)
+                        {
+                            <label class="list-group-item d-flex align-items-center">
+                                <input type="radio" name="selectedUserId" value="@user.UserId" class="form-check-input me-2" />
+                                @if (!string.IsNullOrEmpty(user.ProfilePicture))
+                                {
+                                    <img src="@user.ProfilePicture" alt="@user.UserName" class="rounded-circle me-3" style="width: 40px; height: 40px; object-fit: cover;">
+                                }
+                                <div>
+                                    <strong>@user.UserName</strong><br />
+                                    <small>@user.MutualFriendsCount amigos en comun</small>
+                                </div>
+                            </label>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">No hay usuarios disponibles para enviar solicitud.</div>
+                }
+
+                <div class="text-center mt-3">
+                    <a asp-action="Index" asp-controller="FriendRequest" class="btn btn-outline-secondary me-2">Volver atras</a>
+                    <button type="submit" class="btn btn-success">Enviar solicitud</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,54 @@
+﻿@model MyShipsBoardViewModel
+@{
+    ViewData["Title"] = "Waiting for Opponent";
+}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Configuracion Completada</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                @ViewBag.Message
+            </div>
+
+            <h6 class="mb-3">Tus Barcos:</h6>
+
+            <div class="alert alert-secondary">
+                Gris = Tus barcos posicionados
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered text-center" style="width: auto; margin: 0 auto;">
+                    @for (int row = 0; row < 12; row++)
+                    {
+                        <tr>
+                            @for (int col = 0; col < 12; col++)
+                            {
+                                var cellState = Model.Board[row, col];
+                                var hasShip = cellState == LinkUpApp.Core.Domain.Common.Enum.Battleship.CellStates.ShipPositionCellState.Ship;
+
+                                <td style="width: 40px; height: 40px; padding: 0;" class="@(hasShip ? "bg-secondary" : "")">
+                                    @if (hasShip)
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center h-100">
+                                            <img src="/images/battleship/battleshipIcon.png" alt="Ship" style="width: 30px; height: 30px; object-fit: contain;" />
+                                        </div>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+
+            <div class="mt-4">
+                @if (ViewBag.OpponentReady)
+                {
+                    <a asp-action="AttackBoard" asp-route-gameId="@Model.GameId" class="btn btn-success me-2">Comenzar a Atacar</a>
+                }
+                <a asp-action="Index" class="btn btn-outline-secondary">Volver Atras</a>
+            </div>
+        </div>
+    </div>
+</div>
