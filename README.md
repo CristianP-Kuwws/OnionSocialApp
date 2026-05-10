@@ -1,11 +1,11 @@
-# LinkUpApp - Social Network Web Application
+# OnionSocialApp - Social Network Web Application
 
-## 📌 Description
-LinkUpApp is a full-stack web application developed using ASP.NET Core MVC. It simulates a social networking platform where users can interact through posts, comments, friendships, and even play a Battleship game.
+## Description
+OnionSocialApp is a full-stack web application developed using ASP.NET Core MVC. It is a social networking platform where users can interact through posts, comments, friendships, and a built-in Battleship game.
 
 The project follows Onion Architecture principles and uses Entity Framework Core with a Code-First approach.
 
-## ⚙️ Technologies
+## Technologies
 - C#
 - ASP.NET Core MVC (.NET 8/9)
 - Entity Framework Core (Code-First)
@@ -14,20 +14,20 @@ The project follows Onion Architecture principles and uses Entity Framework Core
 - Bootstrap
 - SQL Server
 
-## 🧠 Features
+## Features
 
-### 🔐 Authentication & Security
+### Authentication & Security
 - User registration with email confirmation
 - Secure login system
 - Password recovery via email token
 - Route protection using `[Authorize]`
 
-### 👤 User Profile
+### User Profile
 - Edit personal information
 - Upload profile picture
 - Change password
 
-### 📝 Posts System
+### Posts System
 - Create, edit, and delete posts
 - Support for:
   - Text + Image
@@ -35,18 +35,18 @@ The project follows Onion Architecture principles and uses Entity Framework Core
 - Like / Dislike system
 - Comment and reply (threaded discussions)
 
-### 👥 Friends System
+### Friends System
 - Send, accept, and reject friend requests
 - View friends list
 - See friends’ posts
 - Mutual friends logic
 
-### 📬 Friend Requests
+### Friend Requests
 - Incoming and outgoing requests
 - Status tracking (Pending, Accepted, Rejected)
 - Validation to avoid duplicate requests
 
-### 🚢 Battleship Game
+### Battleship Game
 - Turn-based multiplayer system
 - Ship positioning system (with validation)
 - Attack system with turn validation
@@ -56,7 +56,7 @@ The project follows Onion Architecture principles and uses Entity Framework Core
 - Auto-win if opponent is inactive (48h rule)
 - Visual boards for attacks and ship placement
 
-### 🧱 Architecture
+### Architecture
 The project follows Onion Architecture:
 
 - **Core.Domain** → Entities
@@ -64,15 +64,12 @@ The project follows Onion Architecture:
 - **Infrastructure** → Persistence, Identity, Email
 - **WebApp (MVC)** → Controllers, Views, UI
 
-## 🚀 How to Run
+## How to Run
 1. Clone the repository
 2. Open the solution in Visual Studio
 3. Configure `appsettings.json`
 4. Apply migrations (if needed)
 5. Run the project
 
-## 📌 Notes
+## Notes
 This project was developed as part of academic training, focusing on real-world application design, clean architecture, and complex feature implementation.
-
-## 📷 Screenshots
-...
