@@ -72,4 +72,4 @@ The project follows Onion Architecture:
 5. Run the project
 
 ## Notes
-This project was developed as part of academic training, focusing on real-world application design, clean architecture, and complex feature implementation.
+This project was originally developed as an academic project under a different internal name. Some solution folders, namespaces, or project references may still contain legacy naming conventions.
